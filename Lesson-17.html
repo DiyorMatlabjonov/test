@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h1>Registration Form</h1>
+
+    <form>
+        <div class="form-control">
+            <div class="alert"></div>
+        </div>
+
+        <div class="form-control">
+            <label for="username">Username</label>
+            <input id="username" type="text" placeholder="Username" minlength="6" maxlength="12">
+            <p class="error"></p>
+        </div>
+        <div class="form-control">
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="Password" minlength="8">
+            <p class="error"></p>
+        </div>
+        <div class="form-control">
+            <button class="btn-submit" type="submit">Submit</button>
+            <button class="btn-reset" type="reset">Reset</button>
+        </div>
+    </form>
+
+    <script>
+        const inputUsername = document.getElementById('username')
+        const inputPassword = document.getElementById('password')
+        const submitBtn = document.querySelector('.btn-submit')
+        const resetBtn = document.querySelector('.btn-reset')
+        const errorFields = document.querySelectorAll('.error')
+        const alertDiv = document.querySelector('.alert')
+        const form = document.querySelector('form')
+
+        const symbols = /[!@#$%^&*()_+ ]/
+        // -------------------------------------------------
+        // -------------------------------------------------
+        // EVENT LISTENERS connection
+        submitBtn.onclick = submitForm
+        resetBtn.onclick = resetForm
+        inputUsername.oninput = validateInput
+        inputPassword.oninput = validateInput
+        // -------------------------------------------------
+        // -------------------------------------------------
+        function submitForm(e) {
+            e.preventDefault()
+            if (errorExists()) {
+                console.log("Error")
+                showAlert("error")
+            } else {
+                console.log("Success")
+                showAlert("success")
+            }
+        }
+
+        function showAlert(type) {
+            alertDiv.style.display = "block"
+            switch (type) {
+                case 'success':
+                    alertDiv.textContent = "Successfully registered"
+                    alertDiv.style.backgroundColor = "#333"
+                    alertDiv.style.color = "greenyellow"
+                    form.style.border = "none"
+                    break
+                case 'error':
+                    alertDiv.textContent = "Ooops!... Error happened"
+                    alertDiv.style.backgroundColor = "orange"
+                    alertDiv.style.color = "snow"
+                    form.style.border = "1px solid red"
+                    break
+                default:
+                    alertDiv.textContent = ""
+                    break
+            }
+            setTimeout(() => {
+                alertDiv.style.display = "none"
+            }, 3000)
+        }
+
+        function errorExists() {
+            if (inputPassword.value.length == 0 || inputUsername.value.length == 0) {
+                return true
+            }
+
+            for (let field of errorFields) {
+                if (field.textContent !== "") {
+                    return true
+                }
+            }
+            return false
+        }
+
+
+        function resetForm(e) {
+            e.preventDefault()
+            e.target.form.reset()
+            e.target.form.querySelectorAll('input').forEach(input => {
+                input.style.border = "none"
+            })
+            e.target.form.style.border = "none"
+            for (let field of errorFields) {
+                field.textContent = ""
+            }
+            alertDiv.style.display = "none"
+        }
+        function validateInput(e) {
+            const val = e.target.value
+            const fieldError = e.target.nextElementSibling
+            const input = e.target
+
+            if (symbols.test(val)) {
+                fieldError.textContent = "Symbols are not allowed"
+                input.style.border = "1px solid red"
+            } else {
+                fieldError.textContent = ""
+                input.style.border = "none"
+            }
+        }
+
+
+    </script>
+</body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        transition: 0.5s;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    form {
+        width: 50%;
+        margin: 10px auto;
+        background-color: #DBE3FF;
+        padding: 50px 10px 20px 10px;
+        border-radius: 10px;
+    }
+
+    .form-control {
+        margin: 10px 0;
+    }
+
+    .form-control * {
+        margin: 5px 0;
+    }
+
+    input,
+    button {
+        padding: 10px 20px;
+        display: block;
+        width: 100%;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+    }
+
+    input:focus {
+        background-color: white;
+    }
+
+    button.btn-reset {
+        background: linear-gradient(to right, #FFC0CB, #FF69B4);
+    }
+
+    button.btn-submit {
+        background: linear-gradient(to right, #00FFFF, #00BFFF);
+    }
+
+    button:hover {
+        background-color: green;
+        color: snow;
+        cursor: pointer;
+    }
+
+    .form-control .error {
+        color: red;
+        text-align: center;
+        font-size: small;
+    }
+
+    .form-control .alert {
+        padding: 10px 20px;
+        text-align: center;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        display: none;
+    }
+</style>
+
+</html>
